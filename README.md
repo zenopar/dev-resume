@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DevResume — Single-Page A4 Developer Resume Builder
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.3-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/CVA-Class_Variance_Authority-violet?style=for-the-badge" alt="CVA" />
+  <img src="https://img.shields.io/badge/PDF_Engine-@react--pdf/renderer-red?style=for-the-badge" alt="React PDF" />
+</p>
+
+A privacy-focused, single-page A4 developer resume generator built for software engineers, systems architects, and technical leads. DevResume enforces a strict 1-page boundary through real-time page budget monitoring, customizable typographic density scaling, and pure client-side vector PDF generation.
+
+---
+
+## Key Features
+
+- **Strict 1-Page A4 Constraint**: Built-in dynamic height calculation with live visual feedback (`PageBudgetMeter`) to guarantee content fits on a single physical page.
+- **Typographic Density Controls**: Granular control over font sizing and vertical spacing multipliers with automatic zoom fitting.
+- **Pure Vector PDF Export**: Uses `@react-pdf/renderer` with locally bundled Unicode **Roboto** fonts for crisp, selectable vector text with full Latin Extended / Czech diacritics (`Ě, Š, Č, Ř, Ž, Ů, Ť, Ď, Ň`).
+- **3 Curated Developer Templates**:
+  - **Modern Monospace**: High-signal developer layout with monospaced metadata and clear technical hierarchy.
+  - **Compact Split Sidebar**: High-density 2-column layout (58% / 38%) tailored for extensive skill matrices.
+  - **Technical Minimal**: Academic LaTeX-inspired single-column format.
+- **Resume Localization**: Toggle resume output between English (EN) and Czech (CS) without altering the editor interface.
+- **Local-First & Offline**: Automatically syncs data to browser `LocalStorage`. Zero telemetry, zero external APIs, complete data privacy.
+- **Native Print Engine**: Clean `@media print` stylesheet optimized with 1:1 paper geometry for direct browser printing (`Ctrl + P`).
+- **CVA Design System**: Component library built with `class-variance-authority`, `clsx`, and `tailwind-merge`.
+
+---
+
+## Tech Stack
+
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Core**: [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Component Variants**: [Class Variance Authority (CVA)](https://cva.style/docs), [tailwind-merge](https://github.com/dcastil/tailwind-merge), [clsx](https://github.com/lukeed/clsx)
+- **Vector PDF Engine**: [@react-pdf/renderer](https://react-pdf.org/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+
+---
+
+## Architecture
+
+```
+src/
+├── components/ui/       # CVA design system primitives (Button, Input, Card, Modal, Slider, etc.)
+├── features/
+│   ├── editor/          # 3x3 category navigation grid and section form controller
+│   ├── personal-info/   # Personal info & contact details forms
+│   ├── about-me/        # Professional summary form
+│   ├── experience/      # Work experience timeline & markdown bullet support
+│   ├── projects/        # Highlighted projects & live repositories
+│   ├── skills/          # Categorized technical skill matrix
+│   ├── education/       # Degrees, institutions & coursework
+│   ├── certifications/  # Certifications & credentials
+│   ├── awards/          # Competitions, hackathons & honors
+│   ├── languages/       # CEFR language proficiency levels
+│   ├── preview/         # A4 preview canvas, page budget meter, density controls & templates
+│   ├── pdf/             # Vector PDF documents, styles, and local fonts
+│   └── resume/          # Global resume state, reducer, context, translations & sample data
+└── lib/
+    └── utils.ts         # cn utility helper
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18.18+ or 20+
+- `npm`, `pnpm`, or `bun`
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/zenopar/cv-generator.git
+cd cv-generator
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.

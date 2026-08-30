@@ -1,0 +1,414 @@
+import React from "react";
+import { ResumeData } from "../../resume/types";
+import { getResumeLabels } from "../../resume/translations";
+import { Icon } from "@/components/ui";
+
+export interface TemplateProps {
+  data: ResumeData;
+}
+
+export const ModernMonoTemplate: React.FC<TemplateProps> = ({ data }) => {
+  const {
+    personalInfo,
+    aboutMe,
+    experience,
+    projects,
+    skills,
+    education,
+    certifications,
+    awards,
+    languages,
+    settings,
+  } = data;
+
+  const fontScale = settings.fontSizeMultiplier || 1.05;
+  const spaceScale = settings.spacingMultiplier || 1.0;
+  const labels = getResumeLabels(settings.language);
+
+  const formatUrl = (url: string) => {
+    return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  };
+
+  const renderFormattedBullet = (text: string) => {
+    const cleanText = text.replace(/^[•\-\*]\s*/, "");
+    if (cleanText.includes("**")) {
+      const parts = cleanText.split("**");
+      return (
+        <span>
+          {parts.map((part, i) =>
+            i % 2 === 1 ? (
+              <strong key={i} className="font-bold text-black">
+                {part}
+              </strong>
+            ) : (
+              <span key={i}>{part}</span>
+            )
+          )}
+        </span>
+      );
+    }
+    return <span>{cleanText}</span>;
+  };
+
+  return (
+    <div
+      className="w-full h-full bg-white text-black font-sans selection:bg-zinc-200"
+      style={{
+        fontSize: `${11 * fontScale}px`,
+        lineHeight: 1.38,
+      }}
+    >
+      {/* Header Banner - High Visual Anchor */}
+      <header
+        className="border-b-2 border-black pb-2 mb-2.5"
+        style={{
+          paddingBottom: `${8 * spaceScale}px`,
+          marginBottom: `${10 * spaceScale}px`,
+        }}
+      >
+        <div className="flex justify-between items-baseline">
+          <div>
+            <h1
+              className="font-bold tracking-tight text-black uppercase"
+              style={{ fontSize: `${24 * fontScale}px`, letterSpacing: "-0.02em" }}
+            >
+              {personalInfo.firstName || "Firstname"}{" "}
+              {personalInfo.lastName || "Lastname"}
+            </h1>
+            {personalInfo.title && (
+              <p
+                className="font-semibold text-zinc-800 tracking-wide mt-0.5"
+                style={{ fontSize: `${12.5 * fontScale}px` }}
+              >
+                {personalInfo.title}
+              </p>
+            )}
+          </div>
+
+          {personalInfo.city && (
+            <div
+              className="text-zinc-700 font-medium flex items-center gap-1.5 shrink-0"
+              style={{ fontSize: `${10.5 * fontScale}px` }}
+            >
+              {settings.showIcons && <Icon name="map-pin" size={12} className="text-black shrink-0" />}
+              <span>{personalInfo.city}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Scannable Contact / Links Row */}
+        <div
+          className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-zinc-800 font-normal"
+          style={{ fontSize: `${10 * fontScale}px` }}
+        >
+          {personalInfo.email && (
+            <a
+              href={`mailto:${personalInfo.email}`}
+              className="hover:underline flex items-center gap-1 text-black font-semibold"
+            >
+              {settings.showIcons && <Icon name="mail" size={11} className="text-black shrink-0" />}
+              <span>{personalInfo.email}</span>
+            </a>
+          )}
+          {personalInfo.phone && (
+            <span className="flex items-center gap-1 text-zinc-900 font-medium">
+              {settings.showIcons && <Icon name="phone" size={11} className="text-black shrink-0" />}
+              <span>{personalInfo.phone}</span>
+            </span>
+          )}
+          {personalInfo.website && (
+            <a
+              href={personalInfo.website.startsWith("http") ? personalInfo.website : `https://${personalInfo.website}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:underline flex items-center gap-1 text-black font-semibold"
+            >
+              {settings.showIcons && <Icon name="globe" size={11} className="text-black shrink-0" />}
+              <span>{formatUrl(personalInfo.website)}</span>
+            </a>
+          )}
+          {personalInfo.github && (
+            <a
+              href={personalInfo.github.startsWith("http") ? personalInfo.github : `https://${personalInfo.github}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:underline flex items-center gap-1 text-black font-semibold"
+            >
+              {settings.showIcons && <Icon name="github" size={11} className="text-black shrink-0" />}
+              <span>{formatUrl(personalInfo.github)}</span>
+            </a>
+          )}
+          {personalInfo.linkedin && (
+            <a
+              href={personalInfo.linkedin.startsWith("http") ? personalInfo.linkedin : `https://${personalInfo.linkedin}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:underline flex items-center gap-1 text-black font-semibold"
+            >
+              {settings.showIcons && <Icon name="linkedin" size={11} className="text-black shrink-0" />}
+              <span>{formatUrl(personalInfo.linkedin)}</span>
+            </a>
+          )}
+        </div>
+      </header>
+
+      {/* Main Body */}
+      <div className="space-y-2.5" style={{ rowGap: `${9 * spaceScale}px` }}>
+        {/* About Me / Summary */}
+        {aboutMe.summary && (
+          <section>
+            <h2
+              className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+              style={{ fontSize: `${11.5 * fontScale}px` }}
+            >
+              {settings.showIcons && <Icon name="user" size={12} />}
+              <span>{labels.aboutMe}</span>
+            </h2>
+            <p className="text-zinc-850 leading-relaxed text-justify" style={{ fontSize: `${10.5 * fontScale}px` }}>
+              {aboutMe.summary}
+            </p>
+          </section>
+        )}
+
+        {/* Work Experience */}
+        {experience.length > 0 && (
+          <section>
+            <h2
+              className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1.5 flex items-center gap-1.5"
+              style={{ fontSize: `${11.5 * fontScale}px` }}
+            >
+              {settings.showIcons && <Icon name="briefcase" size={12} />}
+              <span>{labels.experience}</span>
+            </h2>
+            <div className="space-y-2" style={{ rowGap: `${7 * spaceScale}px` }}>
+              {experience.map((exp) => (
+                <div key={exp.id}>
+                  <div className="flex justify-between items-baseline">
+                    <div className="font-bold text-black" style={{ fontSize: `${11.5 * fontScale}px` }}>
+                      {exp.role} <span className="font-semibold text-zinc-700">| {exp.company}</span>
+                    </div>
+                    <div className="text-zinc-600 font-mono text-[10px] text-right shrink-0 font-medium">
+                      {exp.startDate} – {exp.current ? labels.present : exp.endDate}
+                      {exp.location ? ` • ${exp.location}` : ""}
+                    </div>
+                  </div>
+
+                  {exp.description && (
+                    <div className="text-zinc-800 mt-1 space-y-0.5" style={{ fontSize: `${10.2 * fontScale}px` }}>
+                      {exp.description.split("\n").filter(Boolean).map((line, lIdx) => (
+                        <div key={lIdx} className="flex items-start gap-1.5">
+                          <span className="text-black font-bold select-none leading-tight">•</span>
+                          <span className="flex-1 leading-snug">{renderFormattedBullet(line)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {exp.technologies && exp.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1 text-[9.5px]">
+                      <span className="font-bold text-zinc-600">{labels.technologies}</span>
+                      <span className="text-zinc-800 font-mono">
+                        {exp.technologies.join(" • ")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Key Projects */}
+        {projects.length > 0 && (
+          <section>
+            <h2
+              className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1.5 flex items-center gap-1.5"
+              style={{ fontSize: `${11.5 * fontScale}px` }}
+            >
+              {settings.showIcons && <Icon name="projects" size={12} />}
+              <span>{labels.projects}</span>
+            </h2>
+            <div className="space-y-2" style={{ rowGap: `${6 * spaceScale}px` }}>
+              {projects.map((proj) => (
+                <div key={proj.id}>
+                  <div className="flex justify-between items-baseline">
+                    <div className="font-bold text-black flex items-center gap-1.5" style={{ fontSize: `${11 * fontScale}px` }}>
+                      <span>{proj.name}</span>
+                      {proj.role && <span className="font-medium text-zinc-600 text-[10px]">({proj.role})</span>}
+                    </div>
+                    {proj.website && (
+                      <a
+                        href={proj.website.startsWith("http") ? proj.website : `https://${proj.website}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-black font-semibold hover:underline font-mono text-[9.5px]"
+                      >
+                        {formatUrl(proj.website)}
+                      </a>
+                    )}
+                  </div>
+
+                  {proj.description && (
+                    <p className="text-zinc-800 text-justify mt-0.5 leading-snug" style={{ fontSize: `${10 * fontScale}px` }}>
+                      {proj.description}
+                    </p>
+                  )}
+
+                  {proj.technologies && proj.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-0.5 text-[9.5px] text-zinc-700 font-mono">
+                      <span className="font-bold text-zinc-600">{labels.stack}</span>
+                      <span>{proj.technologies.join(" • ")}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Technical Skills */}
+        {skills.length > 0 && (
+          <section>
+            <h2
+              className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+              style={{ fontSize: `${11.5 * fontScale}px` }}
+            >
+              {settings.showIcons && <Icon name="code" size={12} />}
+              <span>{labels.skills}</span>
+            </h2>
+            <div className="space-y-1" style={{ fontSize: `${10.2 * fontScale}px` }}>
+              {skills.map((cat) => (
+                <div key={cat.id} className="flex items-baseline gap-2">
+                  <span className="font-bold text-black min-w-[125px] shrink-0">
+                    {cat.category}:
+                  </span>
+                  <span className="text-zinc-800 leading-snug">
+                    {cat.skills.join(", ")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* 2-Column Bottom: Education, Certs, Awards, Languages */}
+        <div className="grid grid-cols-2 gap-4 pt-1" style={{ gap: `${12 * spaceScale}px` }}>
+          {/* Left Column: Education & Certifications */}
+          <div className="space-y-2" style={{ rowGap: `${7 * spaceScale}px` }}>
+            {education.length > 0 && (
+              <section>
+                <h2
+                  className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+                  style={{ fontSize: `${11 * fontScale}px` }}
+                >
+                  {settings.showIcons && <Icon name="education" size={11} />}
+                  <span>{labels.education}</span>
+                </h2>
+                {education.map((edu) => (
+                  <div key={edu.id} className="mb-1">
+                    <div className="flex justify-between items-baseline">
+                      <span className="font-bold text-black" style={{ fontSize: `${10.5 * fontScale}px` }}>
+                        {edu.degree}
+                      </span>
+                      <span className="text-zinc-600 font-mono text-[9px]">
+                        {edu.startDate} – {edu.endDate}
+                      </span>
+                    </div>
+                    <div className="text-zinc-800 font-medium" style={{ fontSize: `${9.8 * fontScale}px` }}>
+                      {edu.school}
+                    </div>
+                    {edu.details && (
+                      <div className="text-zinc-600 italic text-[9px] mt-0.5">
+                        {edu.details}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </section>
+            )}
+
+            {certifications.length > 0 && (
+              <section>
+                <h2
+                  className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+                  style={{ fontSize: `${11 * fontScale}px` }}
+                >
+                  {settings.showIcons && <Icon name="check" size={11} />}
+                  <span>{labels.certifications}</span>
+                </h2>
+                <div className="space-y-0.5" style={{ fontSize: `${9.8 * fontScale}px` }}>
+                  {certifications.map((cert) => (
+                    <div key={cert.id} className="flex justify-between items-baseline">
+                      <span className="font-semibold text-black">
+                        {cert.name} <span className="font-normal text-zinc-600">({cert.issuer})</span>
+                      </span>
+                      {cert.date && (
+                        <span className="text-zinc-600 font-mono text-[9px] shrink-0">
+                          {cert.date}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* Right Column: Awards & Languages */}
+          <div className="space-y-2" style={{ rowGap: `${7 * spaceScale}px` }}>
+            {awards.length > 0 && (
+              <section>
+                <h2
+                  className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+                  style={{ fontSize: `${11 * fontScale}px` }}
+                >
+                  {settings.showIcons && <Icon name="award" size={11} />}
+                  <span>{labels.awards}</span>
+                </h2>
+                <div className="space-y-1" style={{ fontSize: `${9.8 * fontScale}px` }}>
+                  {awards.map((award) => (
+                    <div key={award.id}>
+                      <div className="flex justify-between items-baseline">
+                        <span className="font-bold text-black">
+                          {award.name}
+                        </span>
+                        {award.date && (
+                          <span className="text-zinc-600 font-mono text-[9px] shrink-0">
+                            {award.date}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-zinc-700 text-[9.2px]">
+                        {award.issuer} {award.description ? `• ${award.description}` : ""}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {languages.length > 0 && (
+              <section>
+                <h2
+                  className="font-bold text-black uppercase tracking-wider border-b border-zinc-300 pb-0.5 mb-1 flex items-center gap-1.5"
+                  style={{ fontSize: `${11 * fontScale}px` }}
+                >
+                  {settings.showIcons && <Icon name="languages" size={11} />}
+                  <span>{labels.languages}</span>
+                </h2>
+                <div className="flex flex-wrap gap-x-3 gap-y-0.5" style={{ fontSize: `${9.8 * fontScale}px` }}>
+                  {languages.map((lang) => (
+                    <div key={lang.id} className="flex items-center gap-1">
+                      <span className="font-bold text-black">{lang.name}:</span>
+                      <span className="text-zinc-700">{lang.proficiency}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

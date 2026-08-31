@@ -61,6 +61,5 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /srv/dev-resume
-            docker compose pull
-            docker compose up -d --remove-orphans
+            sudo /usr/bin/docker compose -f /srv/dev-resume/docker-compose.yml pull
+            sudo /usr/bin/docker compose -f /srv/dev-resume/docker-compose.yml up -d

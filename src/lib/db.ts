@@ -7,11 +7,15 @@ import { ResumeData, ResumeListItem } from "@/features/resume/types";
 let dbInstance: DatabaseSync | null = null;
 
 export function isDbEnabled(): boolean {
-  const envVal = process.env.USE_DB || process.env.NEXT_PUBLIC_USE_DB;
+  const envVal = process.env.USE_DB;
   return envVal === "true" || envVal === "1";
 }
 
 export function getDb(): DatabaseSync {
+  if (!isDbEnabled()) {
+    throw new Error("Database access denied: USE_DB is false or disabled.");
+  }
+
   if (!dbInstance) {
     const dataDir = path.join(process.cwd(), "data");
     if (!fs.existsSync(dataDir)) {

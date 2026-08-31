@@ -36,6 +36,8 @@ import {
   ArrowUp,
   ArrowDown,
   HelpCircle,
+  Database,
+  Pencil,
 } from "lucide-react";
 
 export interface IconProps {
@@ -77,7 +79,10 @@ export interface IconProps {
     | "upload"
     | "arrow-up"
     | "arrow-down"
-    | "help";
+    | "help"
+    | "database"
+    | "edit";
+
   size?: number | string;
   className?: string;
 }
@@ -164,6 +169,8 @@ export const Icon: React.FC<IconProps> = ({
     "arrow-up": ArrowUp,
     "arrow-down": ArrowDown,
     help: HelpCircle,
+    database: Database,
+    edit: Pencil,
   };
 
   const Component = iconMap[name] || FileText;

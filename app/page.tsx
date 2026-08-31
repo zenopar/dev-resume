@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { ResumeProvider, useResume } from "@/features/resume";
+import { ResumeProvider, useResume, CvSwitcher } from "@/features/resume";
 import { ResumeEditor } from "@/features/editor";
 import {
   A4PreviewContainer,
@@ -55,21 +55,38 @@ function ResumeAppContent() {
             </div>
           </div>
 
+          {/* CV Switcher (supports multiple CVs in both DB and LocalStorage modes) */}
+          <div className="pl-2 border-l border-zinc-800">
+            <CvSwitcher />
+          </div>
+
+
           {/* Storage status */}
           <div className="hidden lg:flex items-center gap-1.5 text-xs text-zinc-400 pl-3 border-l border-zinc-800">
             {storage.saveStatus === "saving" ? (
               <span className="flex items-center gap-1 text-zinc-400 font-mono text-[11px]">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                Saving...
+                {storage.isDbMode ? "Saving to DB..." : "Saving..."}
+              </span>
+            ) : storage.saveStatus === "error" ? (
+              <span className="flex items-center gap-1 text-red-400 font-mono text-[11px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                {storage.isDbMode ? "DB Sync Error" : "Save Error"}
+              </span>
+            ) : storage.isDbMode ? (
+              <span className="flex items-center gap-1 text-zinc-400 font-mono text-[11px]" title="Saved in local SQLite database (data/resumes.db)">
+                <Icon name="database" size={11} className="text-indigo-400" />
+                <span>Saved to DB</span>
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-zinc-400 font-mono text-[11px]">
+              <span className="flex items-center gap-1 text-zinc-400 font-mono text-[11px]" title="Saved in browser localStorage">
                 <Icon name="check" size={11} className="text-emerald-400" />
-                Saved locally
+                <span>Saved locally</span>
               </span>
             )}
           </div>
         </div>
+
 
         {/* Center: Live Page Budget */}
         <div className="hidden md:block">

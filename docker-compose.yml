@@ -1,0 +1,27 @@
+services:
+  web:
+    image: ghcr.io/zenopar/dev-resume:latest
+    container_name: dev-resume
+    restart: unless-stopped
+    ports:
+      - target: 3000
+        published: "3000"
+        host_ip: 127.0.0.1
+        protocol: tcp
+    environment:
+      - USE_DB=${USE_DB:-true}
+      - PASSWORD=${PASSWORD:-}
+    volumes:
+      - resume_data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.10"
+          memory: 128M
+
+
+volumes:
+  resume_data:

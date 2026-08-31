@@ -38,6 +38,10 @@ import {
   HelpCircle,
   Database,
   Pencil,
+  Lock,
+  Unlock,
+  LogOut,
+  Key,
 } from "lucide-react";
 
 export interface IconProps {
@@ -81,7 +85,11 @@ export interface IconProps {
     | "arrow-down"
     | "help"
     | "database"
-    | "edit";
+    | "edit"
+    | "lock"
+    | "unlock"
+    | "log-out"
+    | "key";
 
   size?: number | string;
   className?: string;
@@ -171,6 +179,10 @@ export const Icon: React.FC<IconProps> = ({
     help: HelpCircle,
     database: Database,
     edit: Pencil,
+    lock: Lock,
+    unlock: Unlock,
+    "log-out": LogOut,
+    key: Key,
   };
 
   const Component = iconMap[name] || FileText;

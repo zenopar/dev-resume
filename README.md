@@ -23,9 +23,25 @@ A privacy-focused, single-page A4 developer resume generator built for software 
   - **Compact Split Sidebar**: High-density 2-column layout (58% / 38%) tailored for extensive skill matrices.
   - **Technical Minimal**: Academic LaTeX-inspired single-column format.
 - **Resume Localization**: Toggle resume output between English (EN) and Czech (CS) without altering the editor interface.
-- **Local-First & Offline**: Automatically syncs data to browser `LocalStorage`. Zero telemetry, zero external APIs, complete data privacy.
+- **Dual Storage Modes with Multi-CV Management**:
+  - **Local SQLite Database (`USE_DB=true`)**: Automatically persists multiple CV profiles to a local SQLite database (`data/resumes.db`) powered by Node.js built-in `node:sqlite` and Next.js Server Actions.
+  - **Browser LocalStorage (`USE_DB=false`)**: Zero-backend offline mode that also supports multiple CV profiles, switching, duplicating, renaming, and auto-saving directly in your browser.
 - **Native Print Engine**: Clean `@media print` stylesheet optimized with 1:1 paper geometry for direct browser printing (`Ctrl + P`).
 - **CVA Design System**: Component library built with `class-variance-authority`, `clsx`, and `tailwind-merge`.
+
+---
+
+## Configuration (`.env`)
+
+You can toggle between local SQLite database and browser LocalStorage in `.env`:
+
+```env
+# Enable local SQLite database (persisted in data/resumes.db)
+USE_DB=true
+
+# Or use browser localStorage (both support multi-CV profiles)
+# USE_DB=false
+```
 
 ---
 
@@ -33,6 +49,7 @@ A privacy-focused, single-page A4 developer resume generator built for software 
 
 - **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **Core**: [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
+- **Backend / Persistence**: Next.js Server Actions, [node:sqlite](https://nodejs.org/api/sqlite.html)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Component Variants**: [Class Variance Authority (CVA)](https://cva.style/docs), [tailwind-merge](https://github.com/dcastil/tailwind-merge), [clsx](https://github.com/lukeed/clsx)
 - **Vector PDF Engine**: [@react-pdf/renderer](https://react-pdf.org/)
@@ -58,9 +75,17 @@ src/
 │   ├── languages/       # CEFR language proficiency levels
 │   ├── preview/         # A4 preview canvas, page budget meter, density controls & templates
 │   ├── pdf/             # Vector PDF documents, styles, and local fonts
-│   └── resume/          # Global resume state, reducer, context, translations & sample data
-└── lib/
-    └── utils.ts         # cn utility helper
+│   └── resume/          # Resume feature domain:
+│       ├── actions/     # Server Actions (resume.action.ts) & reducer actions
+│       ├── components/  # Multi-CV switcher (CvSwitcher.tsx)
+│       ├── services/    # Data persistence service (resume.service.ts)
+│       ├── resumeContext.tsx # Global state provider
+│       └── useLocalStorage.ts # Dual-mode storage adapter
+├── lib/
+│   ├── db.ts            # Native node:sqlite database operations
+│   └── utils.ts         # cn utility helper
+└── types/
+    └── sqlite.d.ts      # TypeScript declarations for node:sqlite
 ```
 
 ---
@@ -69,7 +94,8 @@ src/
 
 ### Prerequisites
 
-- Node.js 18.18+ or 20+
+- Node.js 20+ (Node.js 22.5+ or 24+ recommended for local SQLite database engine)
+
 - `npm`, `pnpm`, or `bun`
 
 ### Installation

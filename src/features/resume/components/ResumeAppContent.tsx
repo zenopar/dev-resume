@@ -11,8 +11,13 @@ import {
 } from "@/features/preview";
 import { DownloadPdfButton } from "@/features/pdf";
 import { Icon } from "@/components/ui";
+import { logoutAction } from "@/features/auth";
 
-export function ResumeAppContent() {
+export interface ResumeAppContentProps {
+  isAuthProtected?: boolean;
+}
+
+export function ResumeAppContent({ isAuthProtected = false }: ResumeAppContentProps) {
   const { data, storage, setSettings } = useResume();
   const [pageBudget, setPageBudget] = useState<{
     fillPercentage: number;
@@ -124,6 +129,21 @@ export function ResumeAppContent() {
           </div>
 
           <DownloadPdfButton data={data} />
+
+          {isAuthProtected && (
+            <button
+              type="button"
+              onClick={async () => {
+                await logoutAction();
+                window.location.reload();
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs text-zinc-400 hover:text-white bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-500 rounded-md transition cursor-pointer shadow-xs"
+              title="Lock (Sign out)"
+            >
+              <Icon name="log-out" size={12} className="text-zinc-400" />
+              <span className="hidden sm:inline font-medium">Lock</span>
+            </button>
+          )}
         </div>
       </header>
 

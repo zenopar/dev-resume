@@ -33,14 +33,14 @@ A privacy-focused, single-page A4 developer resume generator built for software 
 
 ## Configuration (`.env`)
 
-You can toggle between local SQLite database and browser LocalStorage in `.env`:
+You can configure persistence and security options in `.env`:
 
 ```env
-# Enable local SQLite database (persisted in data/resumes.db)
+# Storage Mode: Local SQLite database or browser localStorage
 USE_DB=true
 
-# Or use browser localStorage (both support multi-CV profiles)
-# USE_DB=false
+# Optional Password: If set, visitors must enter this password to view or edit CVs
+# PASSWORD=your-secure-password
 ```
 
 ---
@@ -75,6 +75,7 @@ src/
 │   ├── languages/       # CEFR language proficiency levels
 │   ├── preview/         # A4 preview canvas, page budget meter, density controls & templates
 │   ├── pdf/             # Vector PDF documents, styles, and local fonts
+│   ├── auth/            # Optional master password security (PasswordGate, actions & cookie session)
 │   └── resume/          # Resume feature domain:
 │       ├── actions/     # Server Actions (resume.action.ts) & reducer actions
 │       ├── components/  # Multi-CV switcher (CvSwitcher.tsx)
@@ -90,38 +91,71 @@ src/
 
 ---
 
-## Getting Started
+## Installation & Usage
 
 ### Prerequisites
+Before you begin, ensure you have the following installed on your system:
+- **[Docker](https://docs.docker.com/get-docker/)** (Docker Desktop for Windows/Mac, or Docker Engine with the Compose plugin for Linux)
+- **[Git](https://git-scm.com/downloads)** (to clone the repository)
+- *(Optional for local development without Docker)*: **[Node.js](https://nodejs.org/)** (`v20+`, `v22.5+` or `v24+` recommended for the built-in SQLite engine) and `npm` / `pnpm` / `bun`.
 
-- Node.js 20+ (Node.js 22.5+ or 24+ recommended for local SQLite database engine)
+### Quick Start
 
-- `npm`, `pnpm`, or `bun`
+The recommended way to deploy DevResume is using Docker Compose.
 
-### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/zenopar/cv-generator.git
+   cd cv-generator
+   ```
 
-```bash
-# Clone the repository
-git clone https://github.com/zenopar/cv-generator.git
-cd cv-generator
+2. **Configure environment variables:**
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and set your desired storage mode (`USE_DB=true` to persist multiple CVs in local SQLite database `data/resumes.db`, or `USE_DB=false` for browser localStorage). You can also optionally set `PASSWORD=your-password` to require password authentication.
 
-# Install dependencies
-npm install
+3. **Start the platform:**
+   To start the platform using the pre-built Docker image, first pull the latest image and then start the services:
+   ```bash
+   docker compose pull
+   docker compose up -d
+   ```
+   *(Optional: If you prefer to build the image locally from source, you can run `docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build` instead).*
 
-# Start development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Building for Production
-
-```bash
-npm run build
-npm run start
-```
+4. **Access the application:**
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
+
+### Local Development (Node.js)
+
+If you prefer to run the project directly on your host machine without Docker:
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone https://github.com/zenopar/cv-generator.git
+   cd cv-generator
+   cp .env.example .env
+   npm install
+   ```
+
+2. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+3. **Building for production:**
+   ```bash
+   npm run build
+   npm run start
+   ```
+
+
+
+
 
 ## License
 

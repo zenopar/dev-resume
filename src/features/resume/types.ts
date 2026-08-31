@@ -36,6 +36,15 @@ export interface ResumeData {
   lastModified: number;
 }
 
+export interface ResumeListItem {
+  id: string;
+  title: string;
+  created_at: number;
+  updated_at: number;
+  is_active: boolean;
+}
+
+
 export const initialResumeSettings: ResumeSettings = {
   template: "modern",
   density: "normal",

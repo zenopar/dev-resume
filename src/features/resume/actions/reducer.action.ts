@@ -1,13 +1,13 @@
-import { PersonalInfo } from "../personal-info/types";
-import { AboutMe } from "../about-me/types";
-import { WorkExperience } from "../experience/types";
-import { Projects } from "../projects/types";
-import { SkillsData } from "../skills/types";
-import { Education } from "../education/types";
-import { Certifications } from "../certifications/types";
-import { Awards } from "../awards/types";
-import { Languages } from "../languages/types";
-import { ResumeData, ResumeSettings } from "./types";
+import { PersonalInfo } from "../../personal-info/types";
+import { AboutMe } from "../../about-me/types";
+import { WorkExperience } from "../../experience/types";
+import { Projects } from "../../projects/types";
+import { SkillsData } from "../../skills/types";
+import { Education } from "../../education/types";
+import { Certifications } from "../../certifications/types";
+import { Awards } from "../../awards/types";
+import { Languages } from "../../languages/types";
+import { ResumeData, ResumeSettings } from "../types";
 
 export type ResumeAction =
   | { type: "SET_PERSONAL_INFO"; payload: PersonalInfo }

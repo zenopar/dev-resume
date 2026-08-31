@@ -33,14 +33,14 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
   ];
 
   return (
-    <div className="relative bg-zinc-900/90 border border-zinc-800 rounded-lg px-3 py-1.5 shadow-sm flex flex-wrap items-center justify-between gap-2">
+    <div className="relative bg-zinc-900/90 border border-zinc-800 rounded-lg px-3 py-1.5 shadow-xs flex flex-wrap items-center justify-between gap-2">
       {/* Left: Template Switcher & Language Switcher */}
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono hidden sm:inline-block mr-0.5">
+      <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 font-mono hidden sm:inline-block">
             Layout:
           </span>
-          <div className="flex items-center bg-zinc-950/80 p-0.5 rounded-md border border-zinc-800">
+          <div className="flex items-center bg-zinc-950 p-0.5 rounded-md border border-zinc-800 h-6.5">
             {templateOptions.map((t) => {
               const isActive = settings.template === t.value;
               return (
@@ -48,10 +48,10 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
                   key={t.value}
                   type="button"
                   onClick={() => onChange({ template: t.value })}
-                  className={`px-2.5 py-1 text-xs font-medium rounded transition-all cursor-pointer ${
+                  className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all cursor-pointer h-full flex items-center ${
                     isActive
-                      ? "bg-white text-black font-bold shadow-xs"
-                      : "text-zinc-400 hover:text-white"
+                      ? "bg-zinc-100 text-zinc-900 font-semibold shadow-xs"
+                      : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
                   {t.label}
@@ -62,11 +62,11 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
         </div>
 
         {/* CV Language Switcher */}
-        <div className="flex items-center gap-1 border-l border-zinc-800 pl-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono hidden sm:inline-block mr-0.5">
+        <div className="flex items-center gap-1.5 border-l border-zinc-800 pl-2.5">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 font-mono hidden sm:inline-block">
             CV Lang:
           </span>
-          <div className="flex items-center bg-zinc-950/80 p-0.5 rounded-md border border-zinc-800">
+          <div className="flex items-center bg-zinc-950 p-0.5 rounded-md border border-zinc-800 h-6.5">
             {languageOptions.map((l) => {
               const isActive = currentLang === l.value;
               return (
@@ -75,10 +75,10 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
                   type="button"
                   title={l.title}
                   onClick={() => onChange({ language: l.value })}
-                  className={`px-2 py-0.8 text-xs font-mono font-bold rounded transition-all cursor-pointer ${
+                  className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all cursor-pointer h-full flex items-center ${
                     isActive
-                      ? "bg-white text-black shadow-xs"
-                      : "text-zinc-400 hover:text-white"
+                      ? "bg-zinc-100 text-zinc-900 font-semibold shadow-xs"
+                      : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
                   {l.label}
@@ -91,7 +91,7 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
 
       {/* Right: Density Presets & Fine-Tuning Dropdown */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center bg-zinc-950/80 p-0.5 rounded-md border border-zinc-800">
+        <div className="flex items-center bg-zinc-950 p-0.5 rounded-md border border-zinc-800 h-6.5">
           {densityPresets.map((p) => {
             const isActive = settings.density === p.value;
             return (
@@ -110,10 +110,10 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
                     spacingMultiplier: multipliers[p.value].space,
                   });
                 }}
-                className={`px-2 py-0.8 text-xs font-medium rounded transition-all cursor-pointer ${
+                className={`px-2 py-0.5 text-[11px] font-medium rounded transition-all cursor-pointer h-full flex items-center ${
                   isActive
-                    ? "bg-zinc-750 text-white font-bold"
-                    : "text-zinc-400 hover:text-white"
+                    ? "bg-zinc-800 text-zinc-100 font-semibold shadow-xs"
+                    : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 {p.label}
@@ -121,6 +121,7 @@ export const DensityControls: React.FC<DensityControlsProps> = ({
             );
           })}
         </div>
+
 
         {/* Fine Tuning Toggle Button */}
         <div className="relative">

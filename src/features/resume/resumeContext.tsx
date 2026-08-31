@@ -37,8 +37,14 @@ interface ResumeContextType {
 
 const ResumeContext = createContext<ResumeContextType | null>(null);
 
-export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({
+export interface ResumeProviderProps {
+  children: React.ReactNode;
+  isDbEnabled?: boolean;
+}
+
+export const ResumeProvider: React.FC<ResumeProviderProps> = ({
   children,
+  isDbEnabled = false,
 }) => {
   // Start with sample data so the user immediately sees a populated, working 1-page CV
   const [data, dispatch] = useReducer(resumeReducer, sampleResumeData);
@@ -47,7 +53,8 @@ export const ResumeProvider: React.FC<{ children: React.ReactNode }> = ({
     dispatch(actions.hydrateResume(loadedData));
   }, []);
 
-  const storage = useLocalStorage(data, handleHydrate);
+  const storage = useLocalStorage(data, handleHydrate, isDbEnabled);
+
 
   const setPersonalInfo = useCallback((info: PersonalInfo) => {
     dispatch(actions.setPersonalInfo(info));

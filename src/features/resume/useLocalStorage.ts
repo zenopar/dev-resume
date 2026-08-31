@@ -1,4 +1,7 @@
+"use client";
+
 import { useEffect, useState, useCallback, useRef } from "react";
+
 import { ResumeData, ResumeListItem } from "./types";
 import { sampleResumeData } from "./sampleData";
 import {
@@ -102,13 +105,15 @@ export interface UseLocalStorageReturn {
 
 export const useLocalStorage = (
   data: ResumeData,
-  onHydrate: (data: ResumeData) => void
+  onHydrate: (data: ResumeData) => void,
+  isDbConfigured: boolean = false
 ): UseLocalStorageReturn => {
-  const [isDbMode, setIsDbMode] = useState<boolean>(false);
+  const [isDbMode, setIsDbMode] = useState<boolean>(isDbConfigured);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">("saved");
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
+
 
   // CV state (works identically in both DB and LocalStorage mode)
   const [cvList, setCvList] = useState<ResumeListItem[]>([]);
@@ -119,20 +124,18 @@ export const useLocalStorage = (
   const isSwitchingRef = useRef<boolean>(false);
   const initialLoadDoneRef = useRef<boolean>(false);
 
-  // Initial check & hydration: Check if USE_DB is enabled on backend via Server Action
+  // Initial check & hydration:
+  // If USE_DB is false, never send ANY server request - load 100% locally from localStorage
   useEffect(() => {
     let isMounted = true;
 
     async function initStorage() {
-      try {
-        const config = await getStorageConfigAction();
-        if (config.useDb) {
-          if (!isMounted) return;
-          setIsDbMode(true);
-
-          // Fetch resumes from DB via Server Action
+      if (isDbConfigured) {
+        try {
+          // Fetch resumes from DB via Server Action only when DB mode is explicitly enabled
           const cvsData = await getCvsAction();
           if (isMounted && cvsData.activeResume) {
+            setIsDbMode(true);
             setCvList(cvsData.resumes || []);
             setActiveCvId(cvsData.activeResume.id);
             setActiveCvTitle(cvsData.activeResume.title);
@@ -145,12 +148,12 @@ export const useLocalStorage = (
             initialLoadDoneRef.current = true;
             return;
           }
+        } catch (err) {
+          console.warn("DB load failed, falling back to localStorage:", err);
         }
-      } catch (err) {
-        console.warn("DB config check failed, using localStorage mode:", err);
       }
 
-      // LocalStorage mode with full multi-CV support
+      // Pure LocalStorage mode (Zero network/server requests when USE_DB=false)
       if (!isMounted) return;
       setIsDbMode(false);
       try {
@@ -189,7 +192,8 @@ export const useLocalStorage = (
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isDbConfigured, onHydrate]);
+
 
   // Auto-save on data change once hydrated
   useEffect(() => {
